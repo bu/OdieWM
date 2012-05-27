@@ -12,17 +12,6 @@ var Emitter = function(ev) {
 		case 6:
 			return MouseController(XClient, ev);
 		break;
-		
-		// Button release
-		case 5:
-			console.log(ev);
-			return;
-		break;
-
-		// Motion
-		case 6:
-			return;
-		break;
 
 		// Expose Request
 		case 12:

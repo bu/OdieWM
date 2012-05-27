@@ -7,9 +7,6 @@ var x11 = require("x11");
 // odie processor
 var Odie_Events = require("./events/"),
 	Odie_WindowStore = require("./windowStore");
-
-// var
-var dragStart = null;
 	
 x11.createClient(function(display) {
 	// X client

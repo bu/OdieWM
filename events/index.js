@@ -1,11 +1,13 @@
 var ConfigureRequest = require("./configure_request"),
 	MouseController = require("./mouse_actions"),
+	AtomEventProcessor = require("./atom_processor"),
 	windowStore = require("../windowStore");
 
 var XClient;
 
 var Emitter = function(ev) {
 	switch(ev.type) {
+	
 		// Button press
 		case 4:
 		case 5:
@@ -15,7 +17,6 @@ var Emitter = function(ev) {
 
 		// Expose Request
 		case 12:
-			console.log(ev);
 			return;
 		break;
 
@@ -26,6 +27,7 @@ var Emitter = function(ev) {
 
 		// Destory notify
 		case 17:
+			console.log(ev);
 			// check if there has a decorator
 			var decorator = windowStore.callWindow("Wrapper_" + ev.wid1);
 
@@ -40,6 +42,12 @@ var Emitter = function(ev) {
 
 			return;
 		break;
+		
+		// MappingRequest
+		case 20:
+			console.log("Map");
+			return ConfigureRequest(XClient, ev);
+		break;
 
 		// ConfigureReqest
 		case 23:
@@ -48,13 +56,12 @@ var Emitter = function(ev) {
 		
 		// Properity Notify
 		case 28:
-			console.log(ev);
-			return;
+			return AtomEventProcessor(XClient, ev);
 		break;
 		
 		// Default
 		default:
-			console.log(ev);
+			console.log("event", ev);
 		break;
 	}
 }

@@ -2,7 +2,9 @@
 //
 // author: Buwei Chiu <bu@hax4.in> 
 
-var x11 = require("x11");
+var x11 = require("x11"),
+	fs = require("fs"),
+	path = require("path");
 
 // odie processor
 var Odie_Events = require("./events/"),
@@ -19,22 +21,47 @@ x11.createClient(function(display) {
 	// We make these event redirect to root
 	X.ChangeWindowAttributes(root, {
 		eventMask: x11.eventMask.SubstructureRedirect | x11.eventMask.SubstructureNotify
+	}, function(err) {
+		if(err.error === 10) {
+			console.log("Error: maybe another window manager had already ran?");
+			process.exit(1);
+		}
 	});
 	
 	// Create a window under all windows but root (window manager window)
 	var wm_root = X.AllocID();
-	X.CreateWindow(wm_root, root, 0, 0, display.screen[0].pixel_width, display.screen[0].pixel_height, 0, 0, 0, 0, { backgroundPixel: 0xFFFFFF, eventMask: x11.eventMask.Exposure  | x11.eventMask.Button1Motion | x11.eventMask.ButtonPress | x11.eventMask.ButtonRelease });
+	X.CreateWindow(wm_root, root, 0, 0, display.screen[0].pixel_width, display.screen[0].pixel_height, 0, 0, 0, 0, { backgroundPixel: 0x000000, eventMask: x11.eventMask.Exposure  | x11.eventMask.Button1Motion | x11.eventMask.ButtonPress | x11.eventMask.ButtonRelease });
 	X.MapWindow(wm_root);
 	Odie_WindowStore.registerWindow(wm_root, "OdieRoot");
 	
-	// put a string on window
-	var gc_id = X.AllocID();
-	X.CreateGC(gc_id, wm_root, { foreground: 0x000000 });
-	X.PolyText8(wm_root, gc_id, 10, 10, ["Window: " + wm_root + ",gc:" + gc_id]);
-	
-	// ready to call odie
 	Odie_Events.setXClient(X);
+	
+	// TODO: grab all exising window
+	//X.QueryTree()
 
 	X.on("event", Odie_Events.Emitter);
 	X.on("error", Odie_Events.Error);
+
+	fs.watch("./events/", function(event, filename) {
+		if(event == "change") {
+			Odie_Events = null;
+
+			X.removeAllListeners("event");
+			X.removeAllListeners("error");
+
+			delete require.cache[ path.join(__dirname, "events", "index.js") ];
+			delete require.cache[ path.join(__dirname, "events", "mouse_actions.js") ];
+			delete require.cache[ path.join(__dirname, "events", "configure_request.js") ];
+			delete require.cache[ path.join(__dirname, "events", "atom_processor.js") ];
+
+			Odie_Events = require("./events/");
+
+			Odie_Events.setXClient(X);
+
+			X.on("event", Odie_Events.Emitter);
+			X.on("error", Odie_Events.Error);
+
+			console.log("***** Events reloaded");
+		}
+	});
 });

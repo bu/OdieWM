@@ -11,7 +11,7 @@ module.exports = function(X, ev) {
 	var client_width = (typeof ev.width === "undefined") ? 300 : ev.width;
 	var client_height = (typeof ev.height === "undefined") ? 300 : ev.height;
 
-	X.CreateWindow(window_wrapper_id, wm_root, 10, 10, client_width, client_height + 20, 1, 0, 0, 0, {
+	X.CreateWindow(window_wrapper_id, wm_root, 10, 10, client_width + 4, client_height + 22, 1, 0, 0, 0, {
 		backgroundPixel: 0xCCCCCC,
 			borderPixel: 0x000000,
 		eventMask: x11.eventMask.Exposure | x11.eventMask.Button1Motion | x11.eventMask.ButtonPress | x11.eventMask.ButtonRelease
@@ -34,7 +34,7 @@ module.exports = function(X, ev) {
 
 	// reparent the application window to decorator
 	X.ChangeSaveSet(1, ev.wid);
-	X.ReparentWindow(ev.wid, window_wrapper_id, 0, 20);
+	X.ReparentWindow(ev.wid, window_wrapper_id, 2, 20);
 	
 	// show them on screen
 	X.MapWindow(window_wrapper_id);

@@ -8,16 +8,19 @@ var x11 = require("x11"),
 
 // odie processor
 var Odie_Events = require("./events/"),
-	Odie_WindowStore = require("./windowStore");
-	
+	Odie_WindowStore = require("./windowStore"),
+	Odie_AtomStore = require("./atomStore");
+
 x11.createClient(function(display) {
 	// X client
 	var X = display.client;
-	
+
+	Odie_AtomStore.delegate(display);
+
 	// Root window
 	var root = display.screen[0].root;
 	Odie_WindowStore.registerWindow(root, "ScreenRoot");
-	
+
 	// We make these event redirect to root
 	X.ChangeWindowAttributes(root, {
 		eventMask: x11.eventMask.SubstructureRedirect | x11.eventMask.SubstructureNotify
@@ -42,7 +45,7 @@ x11.createClient(function(display) {
 	X.on("event", Odie_Events.Emitter);
 	X.on("error", Odie_Events.Error);
 
-	fs.watch("./events/", function(event, filename) {
+	fs.watch( path.join(__dirname, "events") , function(event, filename) {
 		if(event == "change") {
 			Odie_Events = null;
 

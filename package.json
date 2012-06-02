@@ -1,0 +1,50 @@
+<<<<<<< HEAD
+{
+  "author": "Buwei Chiu <bu@hax4.in>",
+  "name": "OdieWM",
+  "description": "A pure javascript-based manager",
+  "version": "0.0.1",
+  "homepage": "https://github.com/bu/OdieWM",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bu/OdieWM.git"
+  },
+  "dependencies": {
+  	"x11": "git://github.com/bu/node-x11.git"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+=======
+{ "name" : "x11"
+, "author": "Andrey Sidorov <sidorares@yandex.ru>"
+, "description": "A pure node.js JavaScript client implementing X Window (X11) protocol."
+, "keywords": ["X Window", "ui", "gui", "widgets", "desktop", "XWindow", "X"]
+, "homepage": "https://github.com/sidorares/node-x11"
+, "version" : "0.0.5"
+, "maintainers" :
+  [ { "name": "Andrey Sidorov"
+    , "email": "sidoares@yandex.ru"
+    }
+  ]
+, "bugs" : { "url" : "http://github.com/sidorares/node-x11/issues" }
+, "licenses" : [ { "type" : "MIT" } ]
+, "repositories" :
+  [ { "type" : "git"
+    , "url" : "http://github.com/sidorares/node-x11"
+    }
+  ]
+, "main" : "./lib/x11"
+, "engines" : { "node" : "*" }
+, "devDependencies": {
+    "mocha": "*",
+    "should": "*",
+    "sinon": "*"
+  }
+, "scripts": {
+    "test": "mocha",
+    "prepublish" : "npm prune"
+>>>>>>> e631e6fac63d83bbf71dc9f6643ef7bf4838ebb2
+  }
+}

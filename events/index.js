@@ -22,7 +22,7 @@ var Emitter = function(ev) {
 
 		// Create notifiy
 		case 16:
-			windowStore.registerWindow(ev.wid, ev.seq)
+			return windowStore.registerWindow(ev.wid, ev.seq)
 		break;
 
 		// Destory notify
@@ -46,11 +46,24 @@ var Emitter = function(ev) {
 		// MappingRequest
 		case 20:
 			console.log("Map");
-			return ConfigureRequest(XClient, ev);
+			return;
+			//return ConfigureRequest(XClient, ev);
+		break;
+
+		case 21:
+			console.log(ev);
+			return;
+
+		break;
+
+		case 22:
+			console.log(ev);
+			return;
 		break;
 
 		// ConfigureReqest
 		case 23:
+			console.log(ev);
 			return ConfigureRequest(XClient, ev);
 		break;
 		

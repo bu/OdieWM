@@ -3,7 +3,6 @@ var windowMapping = {};
 var windowLayers = [];
 
 exports.registerWindow = function(window_id, alias, position) {
-
 	if(!alias) {
 		alias = window_id;
 	}

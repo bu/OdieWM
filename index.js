@@ -16,6 +16,7 @@ x11.createClient(function(display) {
 	var X = display.client;
 
 	Odie_AtomStore.delegate(display);
+	Odie_AtomStore.scanAtoms();
 
 	// Root window
 	var root = display.screen[0].root;
@@ -23,7 +24,7 @@ x11.createClient(function(display) {
 
 	// We make these event redirect to root
 	X.ChangeWindowAttributes(root, {
-		eventMask: x11.eventMask.SubstructureRedirect | x11.eventMask.SubstructureNotify
+		eventMask: x11.eventMask.SubstructureRedirect | x11.eventMask.SubstructureNotify | x11.eventMask.ProperityChange
 	}, function(err) {
 		if(err.error === 10) {
 			console.log("Error: maybe another window manager had already ran?");
@@ -45,6 +46,27 @@ x11.createClient(function(display) {
 	X.on("event", Odie_Events.Emitter);
 	X.on("error", Odie_Events.Error);
 
+	var repl = require('repl')
+	var net = require('net')
+
+	net.createServer(function (socket) {
+		var r = repl.start({
+			prompt: 'socket '+socket.remoteAddress+':'+socket.remotePort+'> ',
+			input: socket,
+			output: socket,
+			terminal: true,
+			useGlobal: true
+		});
+
+		r.on('exit', function () {
+			socket.end()
+		});
+
+		r.context.socket = socket
+		r.context.atom = Odie_AtomStore;
+		r.context.window = Odie_WindowStore;
+	}).listen(1337);
+
 	fs.watch( path.join(__dirname, "events") , function(event, filename) {
 		if(event == "change") {
 			Odie_Events = null;
@@ -61,10 +83,12 @@ x11.createClient(function(display) {
 
 			Odie_Events.setXClient(X);
 
+			Odie_AtomStore.scanAtoms();
+
 			X.on("event", Odie_Events.Emitter);
 			X.on("error", Odie_Events.Error);
 
-			console.log("***** Events reloaded");
+			console.log("***** Events reloaded, due to " + filename);
 		}
 	});
 });

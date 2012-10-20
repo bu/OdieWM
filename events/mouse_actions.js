@@ -15,7 +15,7 @@ module.exports = function(X, ev) {
 		}
 
 		if(ev.child == 0 && ev.keycode == 1) {
-			exec("uxterm", { env: { DISPLAY: ":0", HOME: "/home/bu"} } );
+			exec("lxterminal", { env: { DISPLAY: ":0", HOME: "/home/bu"} } );
 			return;
 		}
 		
@@ -30,7 +30,7 @@ module.exports = function(X, ev) {
 		// move window to front if clicked within decorator
 		// TODO: it should enable us to click anywhere in the window
 		if(ev.child && ev.child > 0 && ev.keycode === 1) {
-			X.SetStackMode(ev.child, 2);
+			X.RaiseWindow(ev.child);
 			windowStore.updateLayers(X);
 		}
 
@@ -54,6 +54,6 @@ module.exports = function(X, ev) {
 
 		return;
 	}  else if (ev.type == 6) {
-		console.log(ev);
+		console.log("ev type6" , ev);
 	}
 };

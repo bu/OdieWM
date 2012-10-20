@@ -3,6 +3,7 @@ var windowStore = require("./../windowStore"),
 
 var AtomEventProcessor = function(X, ev) {
 	var atom = ev.atom;
+
 	var atoms = atomStore.expose();
 	var ATOM = atomStore.exposeNames();
 
@@ -10,13 +11,13 @@ var AtomEventProcessor = function(X, ev) {
 		case ATOM._NET_WM_NAME:
 		case ATOM.NET_WM_NAME:
 		case ATOM.WM_NAME:
-			X.GetProperty(0, ev.wid, atom, 31, 0, 8, function(err, data) {
+			X.GetProperty(0, ev.window, atom, 31, 0, 8, function(err, data) {
 				if(err) {
-					return console.log(err);
+					return console.log("err wm name" , err);
 				}
 
 				var window_name = data.data.toString();
-				var window_wrapper = windowStore.callWindow("Wrapper_" + ev.wid);
+				var window_wrapper = windowStore.callWindow("Wrapper_" + ev.window);
 				var title_bar = windowStore.getWidget(window_wrapper, "title_bar");
 				
 				if(typeof title_bar === "undefined") {
@@ -36,11 +37,23 @@ var AtomEventProcessor = function(X, ev) {
 
 			});
 		break;
-
+		
+		case ATOM._NET_WM_ICON_NAME:
 		case ATOM.WM_ICON_NAME:
-			X.GetProperty(0, ev.wid, atom, 31, 0, 8, function(err, data) {
+			X.GetProperty(0, ev.window, atom, 31, 0, 8, function(err, data) {
 				//("atom iconname", data.data.toString());
+				console.log("iconame = " + data.data.toString());
 			});
+		break;
+
+		case ATOM.WM_NORMAL_HINTS:
+			X.GetProperty(0, ev.window, atom, 31, 0, 8, function(err, data) {
+				console.log(data.toString());
+			});
+		break;
+
+		case ATOM._NET_WM_USER_TIME:
+			console.log(ev);
 		break;
 
 		default:

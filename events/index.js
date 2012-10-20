@@ -7,7 +7,6 @@ var XClient;
 
 var Emitter = function(ev) {
 	switch(ev.type) {
-	
 		// Button press
 		case 4:
 		case 5:
@@ -22,7 +21,7 @@ var Emitter = function(ev) {
 
 		// Create notifiy
 		case 16:
-			return windowStore.registerWindow(ev.wid, ev.seq)
+			return windowStore.registerWindow(ev.wid, ev.wid);
 		break;
 
 		// Destory notify
@@ -43,9 +42,15 @@ var Emitter = function(ev) {
 			return;
 		break;
 		
+		// Map Notify
+		case 19:
+			console.log("Map Notify");
+			return;
+		break;
+		
 		// MappingRequest
 		case 20:
-			console.log("Map");
+			console.log("Map Request");
 			return;
 			//return ConfigureRequest(XClient, ev);
 		break;
@@ -53,7 +58,6 @@ var Emitter = function(ev) {
 		case 21:
 			console.log(ev);
 			return;
-
 		break;
 
 		case 22:
@@ -69,6 +73,7 @@ var Emitter = function(ev) {
 		
 		// Properity Notify
 		case 28:
+			console.log("event 28", ev);
 			return AtomEventProcessor(XClient, ev);
 		break;
 		

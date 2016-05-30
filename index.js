@@ -11,7 +11,7 @@ var Odie_Events = require("./events/"),
 	Odie_WindowStore = require("./windowStore"),
 	Odie_AtomStore = require("./atomStore");
 
-x11.createClient(function(display) {
+x11.createClient(function(err, display) {
 	// X client
 	var X = display.client;
 
